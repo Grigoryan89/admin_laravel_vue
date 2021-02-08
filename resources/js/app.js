@@ -5,14 +5,52 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 import { Form,HasError,AlertError } from 'vform';
+import moment from 'moment';
 
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 
-import VueRouter from 'vue-router'
 
+Vue.filter('upText' ,function (text){
+    return text.charAt(0).toUpperCase() + text.slice(1)
+});
+Vue.filter('myDate' ,function (created){
+    return moment(created).format('MMMM Do YYYY');
+});
+
+
+import VueRouter from 'vue-router'
 Vue.use(VueRouter)
+
+window.Fire = new Vue()
+
+
+import swal from 'sweetalert2'
+window.swal = swal
+
+const toast = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', swal.stopTimer)
+        toast.addEventListener('mouseleave', swal.resumeTimer)
+    }
+});
+
+window.toast = toast;
+
+
+
+import VueProgressBar from 'vue-progressbar'
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '2px'
+})
 
 let routes = [
     { path: '/profile', component:  require('./components/Profile.vue').default },
